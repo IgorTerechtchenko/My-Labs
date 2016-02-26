@@ -1,0 +1,7 @@
+Idea of this task was to implement different basic algorythms as python modules and merge them into one utility. 
+Algorythms to implement were:
+-text analysis
+-fibonacci numbers generator
+-storage of unique elments
+-some regexp stuff
+-various sorting algorythms
