@@ -1,3 +1,4 @@
+//here i implement finding solutions in one function
 #include<vector>
 #include<stdio.h>
 double hard_discriminant(double a, double b, double c) {
