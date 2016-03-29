@@ -10,7 +10,7 @@ class Logger(object):
     def my_sum(self, a, b):
         return a + b
 
-    def __getattribute__(self, name):  # any way to make this look not so ugly?
+    def __getattribute__(self, name):
         if inspect.ismethod(object.__getattribute__(self, name)) is True:
             def tmp(*args, **kwargs):
                 res = object.__getattribute__(self, name)(*args, **kwargs)
