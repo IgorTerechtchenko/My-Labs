@@ -1,0 +1,23 @@
+#!/usr/bin/python2.7
+import argparse
+from lib import input_generator
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("name", help="file to write to", type=str)
+    parser.add_argument("-l", "--lines", help="desired number of lines in generated file",
+                        type=int, default=10000)
+    parser.add_argument("-f", "--fields", help="desired number fields of one line in generated file",
+                        type=int, default=10)
+    parser.add_argument("-ls", help="line separator", type=str, default="\n")
+    parser.add_argument("-fs", help="field separator", type=str, default="/")
+    parser.add_argument("-n", "--numeric",
+                        help="set true to generate numeric file", action="store_true")
+    args = parser.parse_args()
+    generator = input_generator.BigInputGenerator(args.name, args.lines, args.fields,
+                                                  args.ls, args.fs, args.numeric)
+    generator.execute()
+
+if __name__ == "__main__":
+    main()

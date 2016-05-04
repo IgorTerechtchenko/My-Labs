@@ -11,7 +11,7 @@ class Logger(object):
         return a + b
 
     def __getattribute__(self, name):
-        if inspect.ismethod(object.__getattribute__(self, name)) is True:
+        if inspect.ismethod(object.__getattribute__(self, name)):
             def tmp(*args, **kwargs):
                 res = object.__getattribute__(self, name)(*args, **kwargs)
                 self.log.append((name, str(args), str(kwargs), res))
@@ -30,23 +30,7 @@ class Logger(object):
         return str(res)
 
 
-class Sample_text(Logger):
-    def sample(self):
-        print "ayy lmao m8"
-
-    def mul(self, a, b):
-        return a * b
-
-
-A = Logger()
-print A.x
-
-print A.my_sum(1, 2)
-print A.my_sum(244, 88)
-print A.my_sum(2, 17)
-print A
-
-B = Sample_text()
-B.sample()
-print B.mul(2, 10)
-print B
+def main():
+    L = Logger()
+    L.my_sum(1, 4)
+    print L

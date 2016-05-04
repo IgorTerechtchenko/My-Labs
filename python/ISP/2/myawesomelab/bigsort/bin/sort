@@ -1,0 +1,25 @@
+#!/usr/bin/python2.7
+import argparse
+from lib import bigsort
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("iname", help="file to sort", type=str)
+    parser.add_argument("oname", help="file to store output at", type=str)
+    parser.add_argument("-fsep", help="field separator", type=str, default="/")
+    parser.add_argument("-lsep", help="line separator", type=str, default="\n")
+    parser.add_argument("-key", help="key to sort by", type=int, default=0)
+    parser.add_argument("-fields", help="fields to sort by", type=int, default=0)
+    parser.add_argument("-buff", help="buffer size", type=int, default=100)
+    parser.add_argument("-r", help="reverse sort", action="store_true")
+    parser.add_argument("-n", help="interprete lines as numbers", action="store_true")
+    parser.add_argument("-check", help="check if file is sorted", action="store_true")
+    args = parser.parse_args()
+
+    sort = bigsort.BigSort(args.iname, args.oname, args.lsep, args.fsep, args.buff,
+                           args.fields)
+    sort.execute()
+
+if __name__ == "__main__":
+    main()

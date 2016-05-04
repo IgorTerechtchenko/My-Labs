@@ -1,19 +1,26 @@
-#!/usr/bin/python2.7
 from tempfile import TemporaryFile
+from sys import exit
 
 
 class BigSort(object):
-    def __init__(self, input_file, output_file, line_separator="\n", field_separator="/", buffer_size=100, m_field=0):
+    def __init__(self, input_file, output_file, line_separator="\n", field_separator="/",
+                 buffer_size=100, m_fields=(), numeric=False, reverse=False, check=False):
         self.input_file = input_file
         self.output_file = output_file
         self.line_separator = line_separator
         self.field_separator = field_separator
         self.buffer_size = buffer_size
-        self.m_field = m_field
+        self.m_fields = m_fields
+        self.numeric = numeric
+        self.reverse = reverse
+        self.check = check
 
-    def sort(self):
-        chunks = self.__make_chunks()
-        self.__merge(chunks)
+    def execute(self):
+        if not self.check:
+            chunks = self.__make_chunks()
+            self.__merge(chunks)
+        elif self.check:
+            return self.__check()
 
     def __make_chunks(self):
         """split a [inp] file into [size] of sorted chunks
@@ -26,8 +33,6 @@ class BigSort(object):
                 for line in range(self.buffer_size):
                     x = self.__readline(read)
                     if not x:
-                        for x in files:
-                            prnit
                         return files
                     t += x
                     read.seek(len(x), 1)
@@ -49,10 +54,10 @@ class BigSort(object):
             del(l[0])
             del(l[-1])
 
-        newlist = self.__merge_sort(newlist, self.m_field)
+        newlist = self.__merge_sort(newlist, self.m_fields)
         return self.__restore(newlist)
 
-    def __merge_sort(self, alist, m_field):
+    def __merge_sort(self, alist, m_fields):
         """implementation of mergesort by [el]
            helper function for sort()"""
         if len(alist) > 1:
@@ -60,15 +65,16 @@ class BigSort(object):
             lefthalf = alist[:mid]
             righthalf = alist[mid:]
 
-            self.__merge_sort(lefthalf, self.m_field)
-            self.__merge_sort(righthalf, self.m_field)
+            self.__merge_sort(lefthalf, self.m_fields)
+            self.__merge_sort(righthalf, self.m_fields)
 
             i = 0
             j = 0
             k = 0
 
             while i < len(lefthalf) and j < len(righthalf):
-                if lefthalf[i][self.m_field] < righthalf[j][self.m_field]:
+                # if lefthalf[i][self.m_field] < righthalf[j][self.m_field]:
+                if lefthalf[i] < righthalf[j]:
                     alist[k] = lefthalf[i]
                     i += 1
                 else:
@@ -100,7 +106,11 @@ class BigSort(object):
     def __merge(self, *args):
         """merge sorted files from args into one
            sorted file"""
-        out = open(self.output_file, "r+w")
+        try:
+            out = open(self.output_file, "w")
+        except IOError:
+            print "file does not exist"
+            exit()
         tmp_str = str(unichr(127))
         args = list(args)[0]
         while True:
@@ -125,16 +135,33 @@ class BigSort(object):
         return out
 
     def __readline(self, f):
+        """returns line defined by self.line_separator
+           without moving file pointer"""
         tmp = ""
         while True:
             x = f.read(1)
             if not x:
-                return None
+                tmp += x
+                f.seek(-len(tmp), 1)
+                return tmp
             tmp += x
             if x == self.line_separator:
                 f.seek(-len(tmp), 1)
                 return tmp
 
-
-test = BigSort("f", "o")
-test.sort()
+    def __check(self):
+        try:
+            with open(self.input_file) as infile:
+                while True:
+                    line = self.__readline(infile)
+                    infile.seek(len(line), 1)
+                    nextline = self.__readline(infile)
+                    infile.seek(len(nextline), 1)
+                    if not (line or nextline):
+                        break
+                    if line[:3] > nextline[:3]:
+                        return False
+                return True
+        except IOError:
+            print "bad input"
+            return False

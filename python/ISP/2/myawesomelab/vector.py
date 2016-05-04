@@ -81,4 +81,10 @@ class Vector(object):
         return str(self.values_list)
 
     def __repr__(self):
-        return self.values_list
+        return str(self.values_list)
+
+
+def main():
+    v = Vector(1, 2, 3, 5)
+    print v
+    print type(v)
