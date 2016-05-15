@@ -31,6 +31,17 @@ class Sequence(object):
         return self.iter(self.seqence).my_filter(function)
 
 
+def gen():
+    cur = 5
+    while True:
+        yield cur
+        cur += 1
+
+
 def main():
-    S = Sequence(range(10))
-    print S
+    g = gen()
+    S = Sequence(g)
+    S.my_filter(lambda x: x % 2 == 0)
+
+if __name__ == "__main__":
+    main()
