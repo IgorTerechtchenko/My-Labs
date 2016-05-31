@@ -1,39 +1,30 @@
 wow = 0
 
 
-def merge_sort(alist):  # O(nlog(n))
-    global wow
-    if len(alist) > 1:
-        mid = len(alist) // 2
-        lefthalf = alist[:mid]
-        righthalf = alist[mid:]
-
-        merge_sort(lefthalf)
-        merge_sort(righthalf)
-
+def merge_sort(arr):
+    def merge(arr1, arr2):
         i = 0
         j = 0
-        k = 0
-
-        while i < len(lefthalf) and j < len(righthalf):
-            if lefthalf[i] < righthalf[j]:
-                alist[k] = lefthalf[i]
+        result = []
+        while i < len(arr1) and j < len(arr2):
+            if arr1[i] < arr2[j]:
+                result.append(arr1[i])
                 i += 1
             else:
-                alist[k] = righthalf[j]
+                result.append(arr2[j])
                 j += 1
-            k += 1
+                if i < len(arr1):
+                    result += arr1[i:]
+                elif j < len(arr2):
+                    result += arr2[j:]
 
-        while i < len(lefthalf):
-            alist[k] = lefthalf[i]
-            i += 1
-            k += 1
+        return result
 
-        while j < len(righthalf):
-            alist[k] = righthalf[j]
-            j += 1
-            k += 1
-    return alist
+    if len(arr) > 1:
+        arr1 = merge_sort(arr[:len(arr) // 2])
+        arr2 = merge_sort(arr[len(arr) // 2:])
+        return merge(arr1, arr2)
+    return arr
 
 
 def main():
